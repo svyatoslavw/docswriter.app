@@ -15,6 +15,8 @@ export class UserEntity extends ModelEntity implements IUser {
   id: string
   email: string
   name: null | string
+  confirmationCode: string
+  confirmedAt: Date
   @Expose({ groups: ["user.password"] })
   password: string
   @Expose({ groups: ["user.timestamps"] })

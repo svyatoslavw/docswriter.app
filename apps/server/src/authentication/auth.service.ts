@@ -1,11 +1,20 @@
 import { DatabaseConfigService } from "@/config/database/postgres/config.service"
+import { getEmailHtml } from "@/mails/verification/content"
 import { User } from "@/models/user/entities/user.entity"
-import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common"
+import { UserService } from "@/models/user/user.service"
+import { MailerService } from "@nestjs-modules/mailer"
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException
+} from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
-import { InjectRepository } from "@nestjs/typeorm"
-import { verify } from "argon2"
+import { hash, verify } from "argon2"
 import { Response } from "express"
-import { Repository } from "typeorm"
+import { ConfirmationService } from "./confirmation/confirmation.service"
+import { LoginDto, RegisterDto } from "./dto/login.dto"
+import { IToken, ITokenPayload } from "./interfaces/token.interface"
 
 @Injectable()
 export class AuthService {
@@ -14,20 +23,66 @@ export class AuthService {
   LOGIN_DATE_EXPIRE = new Date(new Date().setDate(new Date().getDate() + 28))
 
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly userServise: UserService,
     private readonly jwtServise: JwtService,
-    private readonly postgresConfigService: DatabaseConfigService
+    private readonly postgresConfigService: DatabaseConfigService,
+    private readonly mailerService: MailerService,
+    private readonly confirmationService: ConfirmationService
   ) {}
 
-  async validateUser(email: string, password: string): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { email } })
-    if (!user) throw new NotFoundException("User with this email does not exist!")
+  async login(dto: LoginDto, res: Response) {
+    const user = await this.validateUser(dto)
 
-    if (!user.password) throw new UnauthorizedException(`Password is missing or invalid`)
+    if (user.email === dto.email) {
+      const { code, expiration } = await this.confirmationService.generateCode()
 
-    if (password) {
-      const isValid = await verify(user.password, password)
+      await this.confirmationService.saveCode(user.id, code, expiration)
+
+      await this.mailerService.sendMail({
+        to: user.email,
+        from: "auth.nest.next@gmail.com",
+        subject: "Login Confirmation",
+        html: getEmailHtml(code)
+      })
+
+      return { code, expiration }
+    }
+
+    if (user.name === dto.name) {
+      const user = await this.validateUser(dto)
+      const { accessToken, refreshToken } = this.issueTokens(user.id)
+
+      this.addRefreshToken(res, refreshToken)
+
+      return { user, accessToken }
+    }
+  }
+  async register(dto: RegisterDto, res: Response): Promise<ITokenPayload> {
+    const { email, name, password } = dto
+
+    const oldUser = await this.userServise.findByEmail(email)
+    if (oldUser) throw new ConflictException("User with this email already exists")
+
+    const user = await this.userServise.create({ email, password: await hash(password), name })
+
+    const { accessToken, refreshToken } = this.issueTokens(user.id)
+
+    this.addRefreshToken(res, refreshToken)
+
+    return { user, accessToken }
+  }
+
+  async validateUser(dto: LoginDto): Promise<User> {
+    let user
+
+    user = await this.userServise.findByEmail(dto.email)
+
+    if (!user) user = await this.userServise.findByName(dto.email)
+
+    if (!user) throw new NotFoundException("User not found!")
+
+    if (dto.password) {
+      const isValid = await verify(user.password, dto.password)
 
       if (!isValid) throw new UnauthorizedException("Invalid password")
     }
@@ -35,7 +90,7 @@ export class AuthService {
     return user
   }
 
-  async issueTokens(userId: string) {
+  private issueTokens(userId: string): IToken {
     const data = { id: userId }
 
     const accessToken = this.jwtServise.sign(data, {
@@ -49,7 +104,7 @@ export class AuthService {
     return { accessToken, refreshToken }
   }
 
-  ddRefreshToken(res: Response, refreshToken: string) {
+  addRefreshToken(res: Response, refreshToken: string) {
     const expiresIn = new Date()
     expiresIn.setDate(expiresIn.getDate() + this.EXPIRE_DAY)
 

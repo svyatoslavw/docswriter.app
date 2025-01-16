@@ -1,21 +1,37 @@
 import { IsEmail, IsOptional, IsString, MaxLength, MinLength } from "class-validator"
 
 export class LoginDto {
+  @IsOptional()
   @IsEmail()
-  @MinLength(3, { message: "Login or Email must have at least 3 characters" })
-  @MaxLength(30, { message: "Login or Email cannot be longer than 30 characters" })
-  email_or_login: string
+  @MinLength(3, { message: "Email must have at least 3 characters" })
+  @MaxLength(30, { message: "Email cannot be longer than 30 characters" })
+  email?: string
+
+  @IsOptional()
+  @IsString()
+  @MinLength(3, { message: "Login must have at least 3 characters" })
+  @MaxLength(20, { message: "Login cannot be longer than 20 characters" })
+  name?: string
 
   @IsOptional()
   @MinLength(8, { message: "Password must have at least 8 characters" })
   password?: string
 }
 
-export class RegisterDto extends LoginDto {
+export class RegisterDto {
+  @IsEmail()
+  @MinLength(3, { message: "Email must have at least 3 characters" })
+  @MaxLength(30, { message: "Email cannot be longer than 30 characters" })
+  email: string
+
   @IsString()
   @MinLength(3, { message: "Login must have at least 3 characters" })
   @MaxLength(20, { message: "Login cannot be longer than 20 characters" })
-  login: string
+  name: string
+
+  @IsOptional()
+  @MinLength(8, { message: "Password must have at least 8 characters" })
+  password?: string
 }
 
 export class ConfirmationDto {

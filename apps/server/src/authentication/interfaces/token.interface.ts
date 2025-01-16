@@ -5,6 +5,7 @@ export interface IToken {
   refreshToken: string
 }
 
-export interface ITokenPayload extends IToken {
+export interface ITokenPayload {
+  accessToken: string
   user: User
 }

@@ -32,6 +32,11 @@ export class UserService extends BaseService<User, UserEntity> {
     return this.transform(user)
   }
 
+  async findByName(name: string): Promise<UserEntity> {
+    const user = await this.repository.findOne({ where: { name } })
+    return this.transform(user)
+  }
+
   transform(model: User): UserEntity {
     return plainToInstance(
       UserEntity,
