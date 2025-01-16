@@ -1,19 +1,18 @@
-import js from "@eslint/js"
-import pluginNext from "@next/eslint-plugin-next"
-import eslintConfigPrettier from "eslint-config-prettier"
-import pluginReact from "eslint-plugin-react"
-import pluginReactHooks from "eslint-plugin-react-hooks"
-import globals from "globals"
-import tseslint from "typescript-eslint"
+const js = require("@eslint/js");
+const pluginNext = require("@next/eslint-plugin-next");
+const eslintConfigPrettier = require("eslint-config-prettier");
+const pluginReact = require("eslint-plugin-react");
+const pluginReactHooks = require("eslint-plugin-react-hooks");
+const globals = require("globals");
+const tseslint = require("typescript-eslint");
 
-import { config as baseConfig } from "./base.js"
-
+const baseConfig = require("./base");
 /**
  * A custom ESLint configuration for libraries that use Next.js.
  *
  * @type {import("eslint").Linter.Config}
  * */
-export const nextJsConfig = [
+ const nextJsConfig = [
   ...baseConfig,
   js.configs.recommended,
   eslintConfigPrettier,
@@ -49,3 +48,5 @@ export const nextJsConfig = [
     },
   },
 ]
+
+module.exports = nextJsConfig

@@ -13,9 +13,9 @@
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
-    "@workspace/eslint-config": "workspace:*",
-    "@workspace/prettier-config": "workspace:*",
-    "@workspace/typescript-config": "workspace:*",
+    "@docswriter/eslint": "workspace:*",
+    "@docswriter/prettier": "workspace:*",
+    "@docswriter/typescript": "workspace:*",
     "husky": "^9.1.7",
     "prettier": "^3.2.5",
     "turbo": "^2.3.0",

@@ -1,4 +1,4 @@
-import { ModeToggle } from '@workspace/ui/components/theme-swtcher';
+import { ModeToggle } from '@docswriter/ui/components/theme-swtcher';
 import { Logotype } from './logotype';
 const Header = () => {
   return (
@@ -24,3 +24,4 @@ const Header = () => {
 };
 
 export { Header };
+

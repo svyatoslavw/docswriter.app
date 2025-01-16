@@ -24,7 +24,7 @@ export class UserExistsConstraint implements ValidatorConstraintInterface {
 }
 
 export function UserExists(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,

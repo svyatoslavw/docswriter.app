@@ -24,7 +24,7 @@ export class UniqueUserEmailConstraint implements ValidatorConstraintInterface {
 }
 
 export function UniqueUserEmail(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,

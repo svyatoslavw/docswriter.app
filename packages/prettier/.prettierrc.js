@@ -3,7 +3,7 @@
  * @type {import("prettier").Config}
  */
 
-export const baseConfig = {
+module.exports = {
   printWidth: 100,
   singleQuote: false,
   jsxSingleQuote: false,

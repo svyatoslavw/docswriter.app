@@ -6,7 +6,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@workspace/ui/components/collapsible';
+} from '@docswriter/ui/components/collapsible';
 import {
   Sidebar,
   SidebarContent,
@@ -18,7 +18,7 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarRail,
-} from '@workspace/ui/components/sidebar';
+} from '@docswriter/ui/components/sidebar';
 
 // This is sample data.
 const data = {

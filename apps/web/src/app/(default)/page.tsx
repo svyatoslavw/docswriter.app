@@ -1,4 +1,4 @@
-import { Button } from "@workspace/ui/components/button"
+import { Button } from "@docswriter/ui/components/button"
 import { ArrowRight } from "lucide-react"
 
 export default function Page() {
