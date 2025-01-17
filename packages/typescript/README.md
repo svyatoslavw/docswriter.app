@@ -1,3 +1,3 @@
-# `@workspace/typescript-config`
+# `@docswriter/typescript`
 
 Shared typescript configuration for the workspace.

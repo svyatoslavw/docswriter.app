@@ -21,6 +21,10 @@ module.exports = {
         'hotfix', // Быстрое исправление
         'project', // Проект
         'merge', // Слияние
+        'web', // Web
+        'backend', // Backend
+        'desktop', // Desktop
+        'mobile', // Mobile
       ],
     ],
   },

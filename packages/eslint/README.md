@@ -1,3 +1,3 @@
-# `@workspace/eslint-config`
+# `@docswriter/eslint`
 
 Shared eslint configuration for the workspace.
