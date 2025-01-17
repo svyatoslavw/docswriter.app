@@ -34,18 +34,7 @@ export class AuthService {
     const user = await this.validateUser(dto)
 
     if (user.email === dto.email) {
-      const { confirmationCode, confirmedAt } = await this.confirmationService.generateCode()
-
-      await this.confirmationService.saveCode(user.id, confirmationCode, confirmedAt)
-
-      await this.mailerService.sendMail({
-        to: user.email,
-        from: "auth.nest.next@gmail.com",
-        subject: "Login Confirmation",
-        html: getEmailHtml(confirmationCode)
-      })
-
-      return { confirmationCode, confirmedAt }
+      this.sendVerificationCode(user)
     }
 
     if (user.name === dto.name) {
@@ -88,6 +77,21 @@ export class AuthService {
     }
 
     return user
+  }
+
+  async sendVerificationCode(user: User): Promise<ICodePayload> {
+    const { confirmationCode, confirmedAt } = await this.confirmationService.generateCode()
+
+    await this.confirmationService.saveCode(user.id, confirmationCode, confirmedAt)
+
+    await this.mailerService.sendMail({
+      to: user.email,
+      from: "auth.nest.next@gmail.com",
+      subject: "Login Confirmation",
+      html: getEmailHtml(confirmationCode)
+    })
+
+    return { confirmationCode, confirmedAt }
   }
 
   private issueTokens(userId: string): IToken {

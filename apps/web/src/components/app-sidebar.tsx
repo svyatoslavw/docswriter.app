@@ -1,13 +1,9 @@
-'use client';
-import { ChevronRight, File, FilePlus, Folder, FolderPlus } from 'lucide-react';
-import * as React from 'react';
+"use client"
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@docswriter/ui/components/collapsible';
-import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
@@ -17,46 +13,34 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
-  SidebarRail,
-} from '@docswriter/ui/components/sidebar';
+  SidebarRail
+} from "@docswriter/ui/components"
+import { ChevronRight, File, FilePlus, Folder, FolderPlus } from "lucide-react"
+import * as React from "react"
 
 // This is sample data.
 const data = {
   changes: [
     {
-      file: 'README.md',
-      state: 'M',
+      file: "README.md",
+      state: "M"
     },
     {
-      file: 'api/hello/route.ts',
-      state: 'U',
+      file: "api/hello/route.ts",
+      state: "U"
     },
     {
-      file: 'app/layout.tsx',
-      state: 'M',
-    },
+      file: "app/layout.tsx",
+      state: "M"
+    }
   ],
   tree: [
-    [
-      'app',
-      [
-        'api',
-        ['hello', ['route.ts']],
-        'page.tsx',
-        'layout.tsx',
-        ['blog', ['page.tsx']],
-      ],
-    ],
-    [
-      'components',
-      ['ui', 'button.tsx', 'card.tsx'],
-      'header.tsx',
-      'footer.tsx',
-    ],
-    ['lib', ['util.ts']],
-    ['public', 'favicon.ico', 'vercel.svg'],
-  ],
-};
+    ["app", ["api", ["hello", ["route.ts"]], "page.tsx", "layout.tsx", ["blog", ["page.tsx"]]]],
+    ["components", ["ui", "button.tsx", "card.tsx"], "header.tsx", "footer.tsx"],
+    ["lib", ["util.ts"]],
+    ["public", "favicon.ico", "vercel.svg"]
+  ]
+}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -94,29 +78,29 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  );
+  )
 }
 
 function Tree({ item }: { item: string | any[] }) {
-  const [name, ...items] = Array.isArray(item) ? item : [item];
+  const [name, ...items] = Array.isArray(item) ? item : [item]
 
   if (!items.length) {
     return (
       <SidebarMenuButton
-        isActive={name === 'button.tsx'}
+        isActive={name === "button.tsx"}
         className="data-[active=true]:bg-transparent"
       >
         <File />
         {name}
       </SidebarMenuButton>
-    );
+    )
   }
 
   return (
     <SidebarMenuItem>
       <Collapsible
         className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90"
-        defaultOpen={name === 'components' || name === 'ui'}
+        defaultOpen={name === "components" || name === "ui"}
       >
         <CollapsibleTrigger asChild>
           <SidebarMenuButton>
@@ -134,5 +118,5 @@ function Tree({ item }: { item: string | any[] }) {
         </CollapsibleContent>
       </Collapsible>
     </SidebarMenuItem>
-  );
+  )
 }

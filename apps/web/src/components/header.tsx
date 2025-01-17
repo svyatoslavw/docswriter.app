@@ -1,5 +1,7 @@
-import { ModeToggle } from '@docswriter/ui/components/theme-swtcher';
-import { Logotype } from './logotype';
+import { ModeToggle } from "@docswriter/ui/components"
+
+import { Logotype } from "./logotype"
+
 const Header = () => {
   return (
     <header className="flex w-full items-center justify-between px-10 py-4">
@@ -20,8 +22,7 @@ const Header = () => {
       </ul>
       <ModeToggle />
     </header>
-  );
-};
+  )
+}
 
-export { Header };
-
+export { Header }

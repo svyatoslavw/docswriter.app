@@ -8,7 +8,7 @@ import { AuthController } from "./auth.controller"
 import { AuthService } from "./auth.service"
 import { ConfirmationService } from "./confirmation/confirmation.service"
 import { JwtProviderModule } from "./providers/jwt.provider"
-import { SessionSerializer } from "./serializers/session.serializer"
+import { SessionService } from "./session/session.service"
 import { JwtStrategy } from "./strategies/jwt.strategy"
 
 @Module({
@@ -19,6 +19,6 @@ import { JwtStrategy } from "./strategies/jwt.strategy"
     MailerProviderModule
   ],
   controllers: [AuthController],
-  providers: [AuthService, ConfirmationService, UserService, JwtStrategy, SessionSerializer]
+  providers: [AuthService, ConfirmationService, UserService, JwtStrategy, SessionService]
 })
 export class AuthModule {}

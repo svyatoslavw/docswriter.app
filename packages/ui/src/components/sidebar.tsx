@@ -5,19 +5,19 @@ import { VariantProps, cva } from 'class-variance-authority';
 import { PanelLeft } from 'lucide-react';
 import * as React from 'react';
 
-import { Button } from '@workspace/ui/components/button';
-import { Input } from '@workspace/ui/components/input';
-import { Separator } from '@workspace/ui/components/separator';
-import { Sheet, SheetContent } from '@workspace/ui/components/sheet';
-import { Skeleton } from '@workspace/ui/components/skeleton';
+import { Button } from '@docswriter/ui/components/button';
+import { Input } from '@docswriter/ui/components/input';
+import { Separator } from '@docswriter/ui/components/separator';
+import { Sheet, SheetContent } from '@docswriter/ui/components/sheet';
+import { Skeleton } from '@docswriter/ui/components/skeleton';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@workspace/ui/components/tooltip';
-import { useIsMobile } from '@workspace/ui/hooks/use-mobile';
-import { cn } from '@workspace/ui/lib/utils';
+} from '@docswriter/ui/components/tooltip';
+import { useIsMobile } from '@docswriter/ui/hooks/use-mobile';
+import { cn } from '@docswriter/ui/lib/utils';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -759,5 +759,6 @@ export {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-  useSidebar,
+  useSidebar
 };
+

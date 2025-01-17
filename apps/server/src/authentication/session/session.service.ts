@@ -2,7 +2,7 @@ import { User } from "@/models/user/entities/user.entity"
 import { UserService } from "@/models/user/user.service"
 import { PassportSerializer } from "@nestjs/passport"
 
-export class SessionSerializer extends PassportSerializer {
+export class SessionService extends PassportSerializer {
   constructor(private userService: UserService) {
     super()
   }

@@ -1,10 +1,15 @@
 import * as React from "react"
 
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "@docswriter/ui/lib/utils"
 
-const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
-  ({ className, type, ...props }, ref) => {
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  error?: string
+}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, error, type, ...props }, ref) => {
     return (
+      <>
       <input
         type={type}
         className={cn(
@@ -13,7 +18,11 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
         )}
         ref={ref}
         {...props}
-      />
+        />
+      {error && (
+        <span className="relative z-50 mx-2 text-start text-xs text-red-500">{error}</span>
+      )}
+      </>
     )
   }
 )

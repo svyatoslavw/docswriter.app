@@ -1,7 +1,12 @@
 import { Button } from "@docswriter/ui/components/button"
 import { ArrowRight } from "lucide-react"
 
-export default function Page() {
+import { usersApi } from "@/shared/api/services/users-api"
+
+export default async function Page() {
+  const data = await usersApi.getAll()
+  console.log(data)
+
   return (
     <div className="flex flex-col my-16 items-center justify-center h-full">
       <div className="flex flex-col gap-4 items-center">
