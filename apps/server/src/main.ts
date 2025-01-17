@@ -14,11 +14,13 @@ async function bootstrap() {
     session({
       name: "sessionToken",
       secret: process.env.JWT_SECRET,
-      saveUninitialized: false,
-      resave: false,
-      cookie: {
-        maxAge: 0
-      }
+      saveUninitialized: true,
+      resave: true
+      // saveUninitialized: false,
+      // resave: false,
+      // cookie: {
+      //   maxAge: 0
+      // }
     })
   )
   app.use(passport.initialize())

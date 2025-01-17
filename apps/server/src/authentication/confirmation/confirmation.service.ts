@@ -5,19 +5,19 @@ import { Injectable } from "@nestjs/common"
 export class ConfirmationService {
   constructor(private readonly userService: UserService) {}
 
-  async generateCode() {
-    const code = Math.floor(100000 + Math.random() * 900000).toString()
+  async generateCode(): Promise<ICodePayload> {
+    const confirmationCode = Math.floor(100000 + Math.random() * 900000).toString()
 
-    const expiration = new Date(Date.now() + 5 * 60000)
+    const confirmedAt = new Date(Date.now() + 5 * 60000)
 
-    return { code, expiration }
+    return { confirmationCode, confirmedAt }
   }
 
   async saveCode(userId: string, confirmationCode: string, confirmedAt: Date) {
     await this.userService.update(userId, { confirmationCode, confirmedAt })
   }
 
-  async getCode(userId: string): Promise<IConfirmation | null> {
+  async getCode(userId: string): Promise<ICodePayload | null> {
     const user = await this.userService.findById(userId)
 
     if (user && user.code && user.codeExpiration > new Date())

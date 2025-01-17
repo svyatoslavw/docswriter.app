@@ -1,4 +1,4 @@
-interface IConfirmation {
+interface ICodePayload{
   confirmationCode: string
   confirmedAt: Date
 }

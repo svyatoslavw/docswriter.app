@@ -1,5 +1,4 @@
 import { DatabaseConfigModule } from "@/config/database/postgres/config.module"
-import { JwtConfigModule } from "@/config/jwt/config.module"
 import { MailerProviderModule } from "@/database/providers/mailer/provider.module"
 import { User } from "@/models/user/entities/user.entity"
 import { UserService } from "@/models/user/user.service"
@@ -8,12 +7,13 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 import { AuthController } from "./auth.controller"
 import { AuthService } from "./auth.service"
 import { ConfirmationService } from "./confirmation/confirmation.service"
+import { JwtProviderModule } from "./providers/jwt.provider"
 import { SessionSerializer } from "./serializers/session.serializer"
 import { JwtStrategy } from "./strategies/jwt.strategy"
 
 @Module({
   imports: [
-    JwtConfigModule,
+    JwtProviderModule,
     TypeOrmModule.forFeature([User]),
     DatabaseConfigModule,
     MailerProviderModule

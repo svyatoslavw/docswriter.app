@@ -30,22 +30,22 @@ export class AuthService {
     private readonly confirmationService: ConfirmationService
   ) {}
 
-  async login(dto: LoginDto, res: Response) {
+  async login(dto: LoginDto, res: Response): Promise<ICodePayload | ITokenPayload> {
     const user = await this.validateUser(dto)
 
     if (user.email === dto.email) {
-      const { code, expiration } = await this.confirmationService.generateCode()
+      const { confirmationCode, confirmedAt } = await this.confirmationService.generateCode()
 
-      await this.confirmationService.saveCode(user.id, code, expiration)
+      await this.confirmationService.saveCode(user.id, confirmationCode, confirmedAt)
 
       await this.mailerService.sendMail({
         to: user.email,
         from: "auth.nest.next@gmail.com",
         subject: "Login Confirmation",
-        html: getEmailHtml(code)
+        html: getEmailHtml(confirmationCode)
       })
 
-      return { code, expiration }
+      return { confirmationCode, confirmedAt }
     }
 
     if (user.name === dto.name) {
