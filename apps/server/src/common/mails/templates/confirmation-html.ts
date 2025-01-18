@@ -1,4 +1,4 @@
-export function getEmailHtml(code: string): string {
+export function getConfirmationHtml(code: string): string {
   return `
         <table class="body-wrap" style="margin: 0; padding: 0; font-size: 100%; font-family: 'Avenir Next', 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; line-height: 1.65; height: 100%; background: #efefef; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important;">
             <tbody>

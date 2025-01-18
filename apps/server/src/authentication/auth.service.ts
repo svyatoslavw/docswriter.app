@@ -1,8 +1,8 @@
+import { MailService } from "@/common/mails/mail.service"
 import { DatabaseConfigService } from "@/config/database/postgres/config.service"
-import { getEmailHtml } from "@/mails/verification/content"
+import { TokenService } from "@/models/token/token.service"
 import { User } from "@/models/user/entities/user.entity"
 import { UserService } from "@/models/user/user.service"
-import { MailerService } from "@nestjs-modules/mailer"
 import {
   ConflictException,
   Injectable,
@@ -12,29 +12,29 @@ import {
 import { JwtService } from "@nestjs/jwt"
 import { hash, verify } from "argon2"
 import { Response } from "express"
-import { ConfirmationService } from "./confirmation/confirmation.service"
 import { LoginDto, RegisterDto } from "./dto/login.dto"
-import { IToken, ITokenPayload } from "./interfaces/token.interface"
+import { ITokenPayload, ITokens, IUserPayload } from "./interfaces/token.interface"
 
 @Injectable()
 export class AuthService {
-  EXPIRE_DAY = 3
-  REFRESH_TOKEN = "refreshToken"
-  LOGIN_DATE_EXPIRE = new Date(new Date().setDate(new Date().getDate() + 28))
+  private EXPIRE_DAY = 3
+  private REFRESH_TOKEN = "refreshToken"
+  private LOGIN_DATE_EXPIRE = new Date(new Date().setDate(new Date().getDate() + 28))
 
   constructor(
     private readonly userServise: UserService,
     private readonly jwtServise: JwtService,
     private readonly postgresConfigService: DatabaseConfigService,
-    private readonly mailerService: MailerService,
-    private readonly confirmationService: ConfirmationService
+    private readonly mailService: MailService,
+    private readonly tokenService: TokenService
   ) {}
 
-  async login(dto: LoginDto, res: Response): Promise<ICodePayload | ITokenPayload> {
+  async login(dto: LoginDto, res: Response): Promise<IUserPayload | ITokenPayload> {
     const user = await this.validateUser(dto)
 
     if (user.email === dto.email) {
-      this.sendVerificationCode(user)
+      this.confirmation(user.id, user.email)
+      this.tokenService.get(user.id)
     }
 
     if (user.name === dto.name) {
@@ -46,14 +46,14 @@ export class AuthService {
       return { user, accessToken }
     }
   }
-  async register(dto: RegisterDto, res: Response): Promise<ITokenPayload> {
+
+  async register(dto: RegisterDto, res: Response): Promise<IUserPayload> {
     const { email, name, password } = dto
 
     const oldUser = await this.userServise.findByEmail(email)
     if (oldUser) throw new ConflictException("User with this email already exists")
 
     const user = await this.userServise.create({ email, password: await hash(password), name })
-
     const { accessToken, refreshToken } = this.issueTokens(user.id)
 
     this.addRefreshToken(res, refreshToken)
@@ -62,7 +62,7 @@ export class AuthService {
   }
 
   async validateUser(dto: LoginDto): Promise<User> {
-    let user
+    let user: User
 
     user = await this.userServise.findByEmail(dto.email)
 
@@ -79,22 +79,25 @@ export class AuthService {
     return user
   }
 
-  async sendVerificationCode(user: User): Promise<ICodePayload> {
-    const { confirmationCode, confirmedAt } = await this.confirmationService.generateCode()
+  async confirmation(id: string, email: string): Promise<void> {
+    const { token } = await this.tokenService.save("code", id)
 
-    await this.confirmationService.saveCode(user.id, confirmationCode, confirmedAt)
-
-    await this.mailerService.sendMail({
-      to: user.email,
-      from: "auth.nest.next@gmail.com",
-      subject: "Login Confirmation",
-      html: getEmailHtml(confirmationCode)
-    })
-
-    return { confirmationCode, confirmedAt }
+    await this.mailService.sendConfirmationEmail(email, token)
   }
 
-  private issueTokens(userId: string): IToken {
+  async resetPassword(id: string, email: string): Promise<void> {
+    const { token } = await this.tokenService.save("token", id)
+
+    await this.mailService.sendResetPasswordEmail(email, token)
+  }
+
+  async twoFactor(id: string, email: string): Promise<void> {
+    const { token } = await this.tokenService.save("token", id)
+
+    await this.mailService.sendTwoFactorEmail(email, token)
+  }
+
+  private issueTokens(userId: string): ITokens {
     const data = { id: userId }
 
     const accessToken = this.jwtServise.sign(data, {

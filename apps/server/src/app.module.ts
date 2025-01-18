@@ -2,6 +2,7 @@ import { PostgresDatabaseProviderModule } from "@/database/providers/postgres/pr
 import { Module } from "@nestjs/common"
 import { PassportModule } from "@nestjs/passport"
 import { AuthModule } from "./authentication/auth.module"
+import { TokenModule } from "./models/token/token.module"
 import { UserModule } from "./models/user/user.module"
 
 @Module({
@@ -9,7 +10,8 @@ import { UserModule } from "./models/user/user.module"
     PostgresDatabaseProviderModule,
     UserModule,
     AuthModule,
-    PassportModule.register({ session: true })
+    PassportModule.register({ session: true }),
+    TokenModule
   ]
 })
 export class AppModule {}

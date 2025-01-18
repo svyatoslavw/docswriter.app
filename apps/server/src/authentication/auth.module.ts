@@ -6,10 +6,10 @@ import { Module } from "@nestjs/common"
 import { TypeOrmModule } from "@nestjs/typeorm"
 import { AuthController } from "./auth.controller"
 import { AuthService } from "./auth.service"
-import { ConfirmationService } from "./confirmation/confirmation.service"
 import { JwtProviderModule } from "./providers/jwt.provider"
 import { SessionService } from "./session/session.service"
 import { JwtStrategy } from "./strategies/jwt.strategy"
+import { ConfirmationService } from "./token/token.service"
 
 @Module({
   imports: [
