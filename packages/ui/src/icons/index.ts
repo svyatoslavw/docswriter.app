@@ -1,2 +1,3 @@
-export * from './GithubIcon.js'
-export * from './GoogleIcon.js'
+export * from './GithubIcon'
+export * from './GoogleIcon'
+

@@ -3,6 +3,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Logger,
   Post,
   Res,
   SerializeOptions,
@@ -26,7 +27,8 @@ export class AuthController {
   }
 
   @Post("register")
-  register(@Body() dto: RegisterDto, @Res({ passthrough: true }) response: Response) {
+  async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) response: Response) {
+    Logger.debug("Registering user...", dto)
     return this.authService.register(dto, response)
   }
 }

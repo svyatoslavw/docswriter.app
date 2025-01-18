@@ -2,6 +2,7 @@ import { requestMethod } from "./helpers/request-method"
 
 export const authApiRequest = () => {
   const headers = {
+    "Content-Type": "application/json",
     Accept: "application/json"
   }
 

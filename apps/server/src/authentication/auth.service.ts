@@ -13,6 +13,7 @@ import { JwtService } from "@nestjs/jwt"
 import { hash, verify } from "argon2"
 import { Response } from "express"
 import { LoginDto, RegisterDto } from "./dto/login.dto"
+import { EmailConfirmationService } from "./email-confirmation/email-confirmation.service"
 import { ITokenPayload, ITokens, IUserPayload } from "./interfaces/token.interface"
 
 @Injectable()
@@ -22,19 +23,19 @@ export class AuthService {
   private LOGIN_DATE_EXPIRE = new Date(new Date().setDate(new Date().getDate() + 28))
 
   constructor(
-    private readonly userServise: UserService,
+    private readonly userService: UserService,
     private readonly jwtServise: JwtService,
     private readonly postgresConfigService: DatabaseConfigService,
     private readonly mailService: MailService,
-    private readonly tokenService: TokenService
+    private readonly tokenService: TokenService,
+    private readonly emailConfirmationService: EmailConfirmationService
   ) {}
 
   async login(dto: LoginDto, res: Response): Promise<IUserPayload | ITokenPayload> {
     const user = await this.validateUser(dto)
 
     if (user.email === dto.email) {
-      this.confirmation(user.id, user.email)
-      this.tokenService.get(user.id)
+      return this.emailConfirmationService.confirm(user.id, user.email)
     }
 
     if (user.name === dto.name) {
@@ -50,10 +51,10 @@ export class AuthService {
   async register(dto: RegisterDto, res: Response): Promise<IUserPayload> {
     const { email, name, password } = dto
 
-    const oldUser = await this.userServise.findByEmail(email)
+    const oldUser = await this.userService.findByEmail(email)
     if (oldUser) throw new ConflictException("User with this email already exists")
 
-    const user = await this.userServise.create({ email, password: await hash(password), name })
+    const user = await this.userService.create({ email, password: await hash(password), name })
     const { accessToken, refreshToken } = this.issueTokens(user.id)
 
     this.addRefreshToken(res, refreshToken)
@@ -62,11 +63,9 @@ export class AuthService {
   }
 
   async validateUser(dto: LoginDto): Promise<User> {
-    let user: User
-
-    user = await this.userServise.findByEmail(dto.email)
-
-    if (!user) user = await this.userServise.findByName(dto.email)
+    const user =
+      (await this.userService.findByEmail(dto.email)) ||
+      (await this.userService.findByName(dto.name))
 
     if (!user) throw new NotFoundException("User not found!")
 
@@ -77,24 +76,6 @@ export class AuthService {
     }
 
     return user
-  }
-
-  async confirmation(id: string, email: string): Promise<void> {
-    const { token } = await this.tokenService.save("code", id)
-
-    await this.mailService.sendConfirmationEmail(email, token)
-  }
-
-  async resetPassword(id: string, email: string): Promise<void> {
-    const { token } = await this.tokenService.save("token", id)
-
-    await this.mailService.sendResetPasswordEmail(email, token)
-  }
-
-  async twoFactor(id: string, email: string): Promise<void> {
-    const { token } = await this.tokenService.save("token", id)
-
-    await this.mailService.sendTwoFactorEmail(email, token)
   }
 
   private issueTokens(userId: string): ITokens {
@@ -111,7 +92,7 @@ export class AuthService {
     return { accessToken, refreshToken }
   }
 
-  addRefreshToken(res: Response, refreshToken: string) {
+  private addRefreshToken(res: Response, refreshToken: string) {
     const expiresIn = new Date()
     expiresIn.setDate(expiresIn.getDate() + this.EXPIRE_DAY)
 
@@ -124,7 +105,7 @@ export class AuthService {
     })
   }
 
-  removeRefreshToken(res: Response) {
+  private removeRefreshToken(res: Response) {
     res.cookie(this.REFRESH_TOKEN, "", {
       httpOnly: true,
       domain: this.postgresConfigService.host,

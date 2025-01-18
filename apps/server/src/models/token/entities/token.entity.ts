@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 import { EnumTokenType, IToken } from "../interfaces/token.interface"
 
-@Entity("projects")
+@Entity("tokens")
 export class Token implements IToken {
   @PrimaryGeneratedColumn("uuid")
   id: string

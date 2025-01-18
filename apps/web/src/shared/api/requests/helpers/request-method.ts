@@ -1,4 +1,4 @@
-import { cookies } from "next/headers"
+import Cookies from "js-cookie"
 
 import { createFullUrl } from "./create-full-url"
 
@@ -12,17 +12,21 @@ export function requestMethod(
   defaultHeaders: Record<string, string>,
   { authorization }: RequestAuthorization = {}
 ) {
-  return async (url: string) => {
+  return async (url: string, defaultOptions?: any) => {
     const tokenName = "accessToken"
 
-    const token = (await cookies()).get(tokenName)?.value
+    const token = Cookies.get(tokenName)
+    console.log("@token", token)
 
     const requestOptions: RequestInit = {
       method,
       headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
         ...defaultHeaders,
         ...(authorization && token && { Authorization: `Bearer ${token}` })
-      }
+      },
+      ...defaultOptions
     }
 
     const targetUrl = createFullUrl(url, serverUrl)

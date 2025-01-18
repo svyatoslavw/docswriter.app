@@ -1,11 +1,15 @@
 import { Token } from "@/models/token/entities/token.entity"
 import { Injectable, NotFoundException } from "@nestjs/common"
+import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from "typeorm"
 import { IGeneratedTokenType, ITokenPayload } from "./interfaces/token.interface"
 
 @Injectable()
 export class TokenService {
-  constructor(private readonly tokenRepository: Repository<Token>) {}
+  constructor(
+    @InjectRepository(Token)
+    private readonly tokenRepository: Repository<Token>
+  ) {}
 
   private async generate(type: IGeneratedTokenType): Promise<ITokenPayload> {
     if (type === "code") {
@@ -31,10 +35,22 @@ export class TokenService {
     return { token, expiresAt }
   }
 
-  async save(type: IGeneratedTokenType, userId: string) {
+  async getByToken(userToken: string): Promise<ITokenPayload & { email: string }> {
+    const { token, email, expiresAt } = await this.tokenRepository.findOne({
+      where: { token: userToken }
+    })
+
+    if (!token) throw new NotFoundException("Token not found!")
+
+    if (expiresAt < new Date()) throw new NotFoundException("Token expired!")
+
+    return { token, expiresAt, email }
+  }
+
+  async save(type: IGeneratedTokenType, userId: string, email: string) {
     const { expiresAt, token } = await this.generate(type)
 
-    const result = await this.tokenRepository.save({ userId, token, expiresAt })
+    const result = await this.tokenRepository.save({ userId, email, token, expiresAt })
 
     if (!result) throw new NotFoundException("Token not saved!")
 

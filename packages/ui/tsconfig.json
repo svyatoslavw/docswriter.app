@@ -2,6 +2,8 @@
   "extends": "@docswriter/typescript/react-library.json",
   "compilerOptions": {
     //"outDir": "dist"
+    "module": "ES2022",
+    "moduleResolution": "bundler",
     "baseUrl": ".",
     "paths": {
       "@docswriter/ui/*": ["./src/*"]

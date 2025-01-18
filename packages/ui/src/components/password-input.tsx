@@ -4,8 +4,12 @@ import { EyeIcon, EyeOffIcon } from "lucide-react"
 import { forwardRef, useState } from "react"
 
 import { Button } from "@docswriter/ui/components/button"
-import { type InputProps, Input } from "@docswriter/ui/components/input"
 import { cn } from "@docswriter/ui/lib/utils"
+import { Input } from "./input"
+
+ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  error?: string
+}
 
 const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
   ({ className, error, ...props }, ref) => {

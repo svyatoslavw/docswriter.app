@@ -1,4 +1,3 @@
-import { Auth } from "@/common/decorators/requests/authorized-user.decorator"
 import {
   ClassSerializerInterceptor,
   Controller,
@@ -18,7 +17,6 @@ export class UserController {
 
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
-  @Auth()
   getAll(): Promise<UserEntity[]> {
     return this.userService.findAll()
   }
