@@ -13,7 +13,7 @@ export class Token implements IToken {
   email: string
   @Column({ type: "enum", enum: EnumTokenType, default: EnumTokenType.CONFIRMATION })
   type: EnumTokenType
-  @Column()
+  @Column({ name: "expires_at" })
   expiresAt: Date
   @Column()
   token: string

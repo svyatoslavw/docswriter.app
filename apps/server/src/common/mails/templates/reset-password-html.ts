@@ -1,4 +1,4 @@
-export function getResetPasswordHtml(code: string): string {
+export function getResetPasswordHtml(code: string, email: string): string {
   return `
           <table class="body-wrap" style="margin: 0; padding: 0; font-size: 100%; font-family: 'Avenir Next', 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; line-height: 1.65; height: 100%; background: #efefef; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important;">
               <tbody>
@@ -14,7 +14,7 @@ export function getResetPasswordHtml(code: string): string {
                       <tr style="margin: 0px; padding: 0px; font-size: 100%; font-family: 'Avenir Next', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif; line-height: 1.65; height: 473px;">
                           <td class="content" style="margin: 0px; padding: 30px 35px; font-size: 100%; line-height: 1.65; background: #030014; height: 473px;">
                           <h2 style="font-family: 'Avenir Next', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif; margin: 0px 0px 20px; padding: 0px; font-size: 28px; line-height: 1.25;">
-                              <span style="color: #b6b2ff;">Hi {{.Email}},</span>
+                              <span style="color: #b6b2ff;">Hi ${email},</span>
                           </h2>
                           <p>
                               <span style="color: #b6b2ff;">Thank you for signing up with us! We're excited to have you as a part of our community.&nbsp; 
@@ -28,7 +28,7 @@ export function getResetPasswordHtml(code: string): string {
                               <tr style="margin: 0px; padding: 0px; font-size: 100%; line-height: 1.65;">
                                   <td style="margin: 0; padding: 0; font-size: 100%; font-family: 'Avenir Next', 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; line-height: 1.65;" align="center">
                                   <p style="margin: 0px 0px 20px; padding: 0px; font-size: 16px; line-height: 1.65;">
-                                      <button style="margin: 0px; padding: 0px; font-size: 100%; line-height: 1.65; color: white; display: inline-block; background: #7000FF; border-style: solid; border-color: #7000FF; border-image: initial; border-width: 10px 20px 10px; font-weight: bold; border-radius: 4px;">505239</button>
+                                      <p style="margin: 0px; padding: 0px; font-size: 100%; line-height: 1.65; color: white; display: inline-block; background: #7000FF; border-style: solid; border-color: #7000FF; border-image: initial; border-width: 10px 20px 10px; font-weight: bold; border-radius: 4px;">${code}</p>
                                   </p>
                                       <a style="color: gray; font-size: 14px">or click on confirmation link</a>
                                   </td>

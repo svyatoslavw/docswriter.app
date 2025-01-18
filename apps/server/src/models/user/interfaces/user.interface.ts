@@ -6,4 +6,6 @@ export interface IUser {
   password: string | null
   avatarUrl: string | null
   projects: IProject[] | null
+  isVerified: boolean
+  isTwoFactorEnabled: boolean
 }

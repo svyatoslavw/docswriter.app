@@ -14,7 +14,7 @@ export class MailService {
       sender: "Docswriter",
       from: "auth.nest.next@gmail.com",
       subject: "Login Confirmation",
-      html: getConfirmationHtml(code)
+      html: getConfirmationHtml(code, email)
     })
   }
 
@@ -24,7 +24,7 @@ export class MailService {
       sender: "Docswriter",
       from: "auth.nest.next@gmail.com",
       subject: "Reset Password",
-      html: getResetPasswordHtml(token)
+      html: getResetPasswordHtml(token, email)
     })
   }
 
@@ -34,7 +34,7 @@ export class MailService {
       sender: "Docswriter",
       from: "auth.nest.next@gmail.com",
       subject: "Two Factor Authentication",
-      html: getTwoFactorHtml(code)
+      html: getTwoFactorHtml(code, email)
     })
   }
 }

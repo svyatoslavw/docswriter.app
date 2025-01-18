@@ -9,7 +9,9 @@ export const extendedUserGroupsForSerializing: string[] = [...defaultUserGroupsF
 export const allUserGroupsForSerializing: string[] = [
   ...extendedUserGroupsForSerializing,
   "user.password",
-  "user.avatar"
+  "user.avatar",
+  "user.verified",
+  "user.twoFactor"
 ]
 export class UserEntity extends ModelEntity implements IUser {
   id: string
@@ -17,6 +19,10 @@ export class UserEntity extends ModelEntity implements IUser {
   name: null | string
   confirmationCode: string
   confirmedAt: Date
+  @Expose({ groups: ["user.twoFactor"] })
+  isTwoFactorEnabled: boolean
+  @Expose({ groups: ["user.verified"] })
+  isVerified: boolean
   @Expose({ groups: ["user.password"] })
   password: string
   @Expose({ groups: ["user.timestamps"] })

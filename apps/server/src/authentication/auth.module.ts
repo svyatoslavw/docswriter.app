@@ -15,9 +15,9 @@ import { JwtStrategy } from "./strategies/jwt.strategy"
 
 @Module({
   imports: [
-    JwtProviderModule,
     TypeOrmModule.forFeature([User, Token]),
     DatabaseConfigModule,
+    JwtProviderModule,
     MailerProviderModule,
     EmailConfirmationModule
   ],

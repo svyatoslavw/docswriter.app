@@ -31,7 +31,10 @@ export function requestMethod(
 
     const targetUrl = createFullUrl(url, serverUrl)
 
-    const response = await fetch(targetUrl, requestOptions)
+    const response = await fetch(targetUrl, {
+      ...requestOptions,
+      credentials: "include"
+    })
 
     if (!response.ok) {
       Promise.reject(response)

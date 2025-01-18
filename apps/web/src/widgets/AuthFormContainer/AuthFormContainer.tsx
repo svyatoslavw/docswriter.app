@@ -2,12 +2,12 @@
 
 import React from "react"
 
-import { LoginForm, RegisterForm, Stage, useStage } from "@/features/Auth"
+import { ConfirmationForm, LoginForm, RegisterForm, Stage, useStage } from "@/features/Auth"
 
 const component: Record<Stage, React.ReactNode> = {
   login: <LoginForm />,
   register: <RegisterForm />,
-  confirmation: <div></div>
+  confirmation: <ConfirmationForm />
 }
 
 const AuthFormContainer = () => {

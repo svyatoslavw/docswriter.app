@@ -3,7 +3,6 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
-  Logger,
   Post,
   Res,
   SerializeOptions,
@@ -11,24 +10,32 @@ import {
 } from "@nestjs/common"
 import { Response } from "express"
 import { AuthService } from "./auth.service"
-import { LoginDto, RegisterDto } from "./dto/login.dto"
+import { ConfirmationDto, LoginDto, RegisterDto } from "./dto/login.dto"
+import { EmailConfirmationService } from "./email-confirmation/email-confirmation.service"
 
 @Controller("auth")
 @SerializeOptions({
   groups: extendedUserGroupsForSerializing
 })
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly emailConfirmationService: EmailConfirmationService
+  ) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post("login")
-  login(@Body() dto: LoginDto, @Res({ passthrough: true }) response: Response) {
+  async login(@Body() dto: LoginDto, @Res({ passthrough: true }) response: Response) {
     return this.authService.login(dto, response)
   }
 
   @Post("register")
-  async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) response: Response) {
-    Logger.debug("Registering user...", dto)
-    return this.authService.register(dto, response)
+  async register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto)
+  }
+
+  @Post("confirmation")
+  async confirm(@Body() dto: ConfirmationDto, @Res({ passthrough: true }) response: Response) {
+    return this.emailConfirmationService.confirm(dto, response)
   }
 }

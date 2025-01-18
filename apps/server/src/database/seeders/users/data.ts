@@ -6,5 +6,7 @@ export const users: IUser[] = Array.from({ length: 20 }, () => ({
   email: faker.internet.email(),
   password: faker.internet.password({ length: 8 }),
   avatarUrl: faker.image.avatar(),
-  projects: []
+  projects: [],
+  isTwoFactorEnabled: false,
+  isVerified: false
 }))

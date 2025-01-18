@@ -30,6 +30,10 @@ export class User implements IUser {
   password: string | null
   @Column({ name: "avatar_url", nullable: true })
   avatarUrl: string
+  @Column({ name: "is_verified", default: false })
+  isVerified: boolean
+  @Column({ name: "is_two_factor_enabled", default: false })
+  isTwoFactorEnabled: boolean
   @OneToMany(() => Project, (project) => project.owner)
   projects: Project[]
 }

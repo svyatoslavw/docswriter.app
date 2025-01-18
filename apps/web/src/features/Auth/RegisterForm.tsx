@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form"
 import { AuthButton } from "./AuthButton"
 import { Footer } from "./Footer"
 import { useRegisterForm } from "./useRegisterForm"
+import { useStage } from "./useStage"
 import { authApi } from "@/shared/api/services/auth-api"
 
 interface IRegisterForm {
@@ -19,6 +20,7 @@ interface IRegisterForm {
 
 const RegisterForm = () => {
   const { onSignIn } = useRegisterForm()
+  const { setStage } = useStage()
 
   const form = useForm<IRegisterForm>({
     mode: "onChange",
@@ -32,7 +34,13 @@ const RegisterForm = () => {
   })
 
   const onSubmit = form.handleSubmit(async (data) => {
-    return await authApi.register(data)
+    try {
+      localStorage.setItem("email", data.email)
+      await authApi.register(data)
+      setStage("confirmation")
+    } catch (error) {
+      console.log(error)
+    }
   })
 
   return (
