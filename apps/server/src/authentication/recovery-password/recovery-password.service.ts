@@ -19,13 +19,13 @@ export class RecoveryPasswordService {
     const user = await this.userService.findByEmail(dto.email)
     if (!user) throw new NotFoundException("User not found!")
 
-    const { token } = await this.tokenService.save("token", user.id, user.email)
+    const tokenData = await this.tokenService.save(user.id, user.email)
 
-    return this.mailService.sendResetPasswordEmail(user.email, token)
+    return this.mailService.sendResetPasswordEmail(user.email, tokenData.code)
   }
 
   async new(dto: NewPasswordDto, userToken: string): Promise<UserEntity> {
-    const token = await this.tokenService.getByToken(userToken)
+    const token = await this.tokenService.get(userToken)
 
     const user = await this.userService.findByEmail(token.email)
     if (!user) throw new NotFoundException("User not found!")

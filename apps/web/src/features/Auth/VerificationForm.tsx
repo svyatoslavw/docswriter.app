@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Button,
   FormField,
@@ -10,12 +12,12 @@ import { Loader2Icon } from "lucide-react"
 
 import { useConfirmationForm } from "./useConfirmationForm"
 
-const ConfirmationForm = () => {
+const VerificationForm = () => {
   const { form, functions, state } = useConfirmationForm()
   return (
     <div className="xs:w-[230px] mx-auto flex flex-col justify-center space-y-6 rounded-xl px-5 sm:w-[280px] lg:w-[300px] xl:w-[350px] 2xl:w-[400px]">
       <div className="flex flex-col space-y-2 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">Email confirmation</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Two factor authentication</h1>
         <p className="text-sm text-muted-foreground">We sent you a code to your email</p>
       </div>
       <form onSubmit={functions.onSubmit} className="flex flex-col space-y-3">
@@ -70,4 +72,4 @@ const ConfirmationForm = () => {
   )
 }
 
-export { ConfirmationForm }
+export { VerificationForm }

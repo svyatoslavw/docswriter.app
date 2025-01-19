@@ -23,10 +23,6 @@ export class User implements IUser {
   @Column()
   name: string
   @Column({ nullable: true, default: null })
-  confirmationCode: string | null
-  @Column({ nullable: true, default: null })
-  confirmedAt: Date | null
-  @Column({ nullable: true, default: null })
   password: string | null
   @Column({ name: "avatar_url", nullable: true })
   avatarUrl: string

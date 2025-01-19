@@ -7,16 +7,15 @@ type RequestAuthorization = { authorization?: boolean }
 
 const serverUrl = process.env.SERVER_URL
 
-export function requestMethod(
+export function requestMethod<T>(
   method: RequestMethod,
   defaultHeaders: Record<string, string>,
   { authorization }: RequestAuthorization = {}
 ) {
   return async (url: string, defaultOptions?: any) => {
-    const tokenName = "accessToken"
+    const tokenName = "refreshToken"
 
     const token = Cookies.get(tokenName)
-    console.log("@token", token)
 
     const requestOptions: RequestInit = {
       method,
@@ -48,7 +47,7 @@ export function requestMethod(
     }
 
     try {
-      return JSON.parse(text)
+      return JSON.parse(text) as Promise<T>
     } catch (e: any) {
       console.error("Failed to parse response", e.message)
       return null

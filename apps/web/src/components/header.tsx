@@ -1,5 +1,6 @@
 import { ModeToggle } from "@docswriter/ui/components"
 
+import { ProfileDropdown } from "./ProfileDropdown"
 import { Logotype } from "./logotype"
 
 const Header = () => {
@@ -20,7 +21,10 @@ const Header = () => {
           <a href="#">FAQ</a>
         </li>
       </ul>
-      <ModeToggle />
+      <div className="flex gap-2">
+        <ProfileDropdown />
+        <ModeToggle />
+      </div>
     </header>
   )
 }

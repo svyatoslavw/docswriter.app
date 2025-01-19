@@ -1,15 +1,15 @@
 export function getResetPasswordHtml(code: string, email: string): string {
   return `
-          <table class="body-wrap" style="margin: 0; padding: 0; font-size: 100%; font-family: 'Avenir Next', 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; line-height: 1.65; height: 100%; background: #efefef; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important;">
+          <table class="body-wrap" style="margin: 0; padding: 0; font-size: 100%; font-family: 'Avenir Next', 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; line-height: 1.65; height: 100%; background: #fff; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important;">
               <tbody>
               <tr style="margin: 0; padding: 0; font-size: 100%; font-family: 'Avenir Next', 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; line-height: 1.65;">
                   <td class="container" style="margin: 0 auto !important; padding: 0; font-size: 100%; font-family: 'Avenir Next', 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; line-height: 1.65; display: block !important; clear: both !important; max-width: 580px !important;"><!-- Message start -->
                   <table style="margin: 0px; padding: 0px; font-size: 100%; font-family: 'Avenir Next', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif; line-height: 1.65; border-collapse: collapse; width: 100%; height: 200px;">
                       <tbody>
                       <tr style="margin: 0px; padding: 0px; font-size: 100%; font-family: 'Avenir Next', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;">
-                          <td class="masthead" style="margin: 0px; padding: 50px 0px; font-size: 100%; font-family: 'Avenir Next', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif; background: #030014; color: white;" align="center">
-                          <img src="https://previews.dropbox.com/p/thumb/ACgW08mybAi86ySok74iP5gQ-qIrCIZqj_jbQw9UDjW3e4FWi4DvUWBh3APE2VHFk6zghNBL3bN-GWSmzTUBznjnbdiTyFMzr_2C9KsEkvXao7keMMS4StYksB5MazpX9NObC5t6u5evdfLj9MbY8Kcm6noSqyY3NapIE8fL_u2sEmzTEtyNQRkED_I2kZtnmyxycqjCYZwhyK5k1NDCtDwL4tBE-NinNVLrUT7aMnnZe0g-gabCpi8W8_plJhS-2GAhRICMulCUQ2w2wn0ZDIdRlGLEJsH1_I_R6qidz4kZ8-DVD-4wW6DcSJh534GBcsvXfz_SHHYMTK0ACVAx_xxx/p.png" alt="Cypress Logo" width="136" height="125">
-                          </td>
+                        <td class="masthead" style="margin: 0px; padding: 50px 0px; font-size: 100%; font-family: 'Avenir Next', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif; background: #030014; color: white;" align="center">
+                        <img src="https://previews.dropbox.com/p/thumb/ACgW08mybAi86ySok74iP5gQ-qIrCIZqj_jbQw9UDjW3e4FWi4DvUWBh3APE2VHFk6zghNBL3bN-GWSmzTUBznjnbdiTyFMzr_2C9KsEkvXao7keMMS4StYksB5MazpX9NObC5t6u5evdfLj9MbY8Kcm6noSqyY3NapIE8fL_u2sEmzTEtyNQRkED_I2kZtnmyxycqjCYZwhyK5k1NDCtDwL4tBE-NinNVLrUT7aMnnZe0g-gabCpi8W8_plJhS-2GAhRICMulCUQ2w2wn0ZDIdRlGLEJsH1_I_R6qidz4kZ8-DVD-4wW6DcSJh534GBcsvXfz_SHHYMTK0ACVAx_xxx/p.png?is_prewarmed=true" alt="Logo" width="136" height="125">
+                        </td>
                       </tr>
                       <tr style="margin: 0px; padding: 0px; font-size: 100%; font-family: 'Avenir Next', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif; line-height: 1.65; height: 473px;">
                           <td class="content" style="margin: 0px; padding: 30px 35px; font-size: 100%; line-height: 1.65; background: #030014; height: 473px;">
@@ -28,7 +28,7 @@ export function getResetPasswordHtml(code: string, email: string): string {
                               <tr style="margin: 0px; padding: 0px; font-size: 100%; line-height: 1.65;">
                                   <td style="margin: 0; padding: 0; font-size: 100%; font-family: 'Avenir Next', 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; line-height: 1.65;" align="center">
                                   <p style="margin: 0px 0px 20px; padding: 0px; font-size: 16px; line-height: 1.65;">
-                                      <p style="margin: 0px; padding: 0px; font-size: 100%; line-height: 1.65; color: white; display: inline-block; background: #7000FF; border-style: solid; border-color: #7000FF; border-image: initial; border-width: 10px 20px 10px; font-weight: bold; border-radius: 4px;">${code}</p>
+                                    <span style="margin: 0px; padding: 0px; font-size: 22px; line-height: 1.65; color: white; display: inline-block; background: #7000FF; border-style: solid; border-color: #7000FF; border-image: initial; border-width: 10px 20px 10px; font-weight: bold; border-radius: 4px;">${code}</span>
                                   </p>
                                       <a style="color: gray; font-size: 14px">or click on confirmation link</a>
                                   </td>

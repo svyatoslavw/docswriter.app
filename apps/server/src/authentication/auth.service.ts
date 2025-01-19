@@ -12,29 +12,37 @@ import { Response } from "express"
 import { LoginDto, RegisterDto } from "./dto/login.dto"
 import { EmailConfirmationService } from "./email-confirmation/email-confirmation.service"
 import { ITokenPayload, IUserPayload } from "./interfaces/token.interface"
+import { TwoFactorVerificationService } from "./two-factor-verification/two-factor-verification.service"
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly tokenService: TokenService,
-    private readonly emailConfirmationService: EmailConfirmationService
+    private readonly emailConfirmationService: EmailConfirmationService,
+    private readonly twoFactorVerificationService: TwoFactorVerificationService
   ) {}
 
   async login(dto: LoginDto, res: Response): Promise<IUserPayload | ITokenPayload> {
     const user = await this.validateUser(dto)
 
-    if (user.email === dto.email) {
-      return this.emailConfirmationService.send(user.id, user.email)
+    if (!user) throw new NotFoundException("User not found!")
+
+    if (user.isTwoFactorEnabled) {
+      return this.twoFactorVerificationService.send(user.id, user.email)
     }
 
-    if (user.name === dto.name) {
+    if (dto.name && user.name === dto.name) {
       const user = await this.validateUser(dto)
       const { accessToken, refreshToken } = this.tokenService.issueTokens(user.id)
 
       this.tokenService.addRefreshToken(res, refreshToken)
 
       return { user, accessToken }
+    }
+
+    if (dto.email && user.email === dto.email) {
+      return this.emailConfirmationService.send(user.id, user.email)
     }
   }
 
@@ -49,9 +57,7 @@ export class AuthService {
   }
 
   async validateUser(dto: LoginDto): Promise<User> {
-    const user =
-      (await this.userService.findByEmail(dto.email)) ||
-      (await this.userService.findByName(dto.name))
+    const user = await this.userService.findByCredentials(dto.name, dto.email)
 
     if (!user) throw new NotFoundException("User not found!")
 

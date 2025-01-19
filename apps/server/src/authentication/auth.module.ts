@@ -12,6 +12,7 @@ import { AuthService } from "./auth.service"
 import { EmailConfirmationModule } from "./email-confirmation/email-confirmation.module"
 import { JwtProviderModule } from "./providers/jwt.provider"
 import { JwtStrategy } from "./strategies/jwt.strategy"
+import { TwoFactorVerificationModule } from "./two-factor-verification/two-factor-verification.module"
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { JwtStrategy } from "./strategies/jwt.strategy"
     DatabaseConfigModule,
     JwtProviderModule,
     MailerProviderModule,
-    EmailConfirmationModule
+    EmailConfirmationModule,
+    TwoFactorVerificationModule
   ],
   controllers: [AuthController],
   providers: [AuthService, TokenService, MailService, UserService, JwtStrategy]

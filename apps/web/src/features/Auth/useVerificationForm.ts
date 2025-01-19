@@ -7,9 +7,9 @@ import { useForm } from "react-hook-form"
 import { authApi } from "@/shared/api/services/auth-api"
 import { IAuthTokenRequest } from "@/shared/types"
 
-type IAuthConfirmationForm = IAuthTokenRequest
+type IAuthTwoFactorForm = IAuthTokenRequest
 
-export const useConfirmationForm = () => {
+export const useVerificationForm = () => {
   const { push } = useRouter()
 
   const countDownRef = React.useRef<NodeJS.Timeout>()
@@ -26,17 +26,16 @@ export const useConfirmationForm = () => {
     if (!seconds) clearInterval(countDownRef.current)
   }, [seconds])
 
-  const confirmationForm = useForm<IAuthConfirmationForm>({
+  const confirmationForm = useForm<IAuthTwoFactorForm>({
     defaultValues: {
       code: ""
     }
   })
 
-  const onSubmit = confirmationForm.handleSubmit(async (values: IAuthConfirmationForm) => {
+  const onSubmit = confirmationForm.handleSubmit(async (values: IAuthTwoFactorForm) => {
     try {
       setLoading(true)
-      const response = await authApi.confirmation(values)
-      if (response.accessToken) push("/")
+      return authApi.confirmation(values)
     } catch (error) {
       console.log(error)
     } finally {

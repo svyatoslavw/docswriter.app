@@ -1,15 +1,13 @@
 import { requestMethod } from "./helpers/request-method"
 
-export const defaultApiRequest = () => {
-  const headers = {
-    Accept: "application/json"
-  }
+export const defaultApiRequest = <T>() => {
+  const headers = {}
 
   return {
-    get: requestMethod("GET", headers),
-    post: requestMethod("POST", headers),
-    put: requestMethod("PUT", headers),
-    delete: requestMethod("DELETE", headers),
-    patch: requestMethod("PATCH", headers)
+    get: requestMethod<T>("GET", headers),
+    post: requestMethod<T>("POST", headers),
+    put: requestMethod<T>("PUT", headers),
+    delete: requestMethod<T>("DELETE", headers),
+    patch: requestMethod<T>("PATCH", headers)
   }
 }

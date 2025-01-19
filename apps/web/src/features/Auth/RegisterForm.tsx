@@ -2,46 +2,14 @@
 
 import { GithubIcon, GoogleIcon } from "@docswriter/ui/icons"
 import { Button, Checkbox, Form, FormField, Input, PasswordInput } from "@workspace/ui/components"
-import { useForm } from "react-hook-form"
+import { Loader2Icon } from "lucide-react"
 
 import { AuthButton } from "./AuthButton"
 import { Footer } from "./Footer"
 import { useRegisterForm } from "./useRegisterForm"
-import { useStage } from "./useStage"
-import { authApi } from "@/shared/api/services/auth-api"
-
-interface IRegisterForm {
-  email: string
-  name: string
-  password: string
-  confirmPassword: string
-  acceptTerms: boolean
-}
 
 const RegisterForm = () => {
-  const { onSignIn } = useRegisterForm()
-  const { setStage } = useStage()
-
-  const form = useForm<IRegisterForm>({
-    mode: "onChange",
-    defaultValues: {
-      email: "",
-      name: "",
-      password: "",
-      confirmPassword: "",
-      acceptTerms: false
-    }
-  })
-
-  const onSubmit = form.handleSubmit(async (data) => {
-    try {
-      localStorage.setItem("email", data.email)
-      await authApi.register(data)
-      setStage("confirmation")
-    } catch (error) {
-      console.log(error)
-    }
-  })
+  const { form, functions, state } = useRegisterForm()
 
   return (
     <div className="xs:w-[230px] mx-auto flex flex-col justify-center space-y-6 rounded-xl px-5 sm:w-[280px] lg:w-[300px] xl:w-[350px] 2xl:w-[400px]">
@@ -50,7 +18,7 @@ const RegisterForm = () => {
         <h3 className="text-sm">Enter required details for registration</h3>
       </div>
       <Form {...form}>
-        <form className="flex flex-col gap-4" onSubmit={onSubmit}>
+        <form className="flex flex-col gap-4" onSubmit={functions.onSubmit}>
           <FormField
             control={form.control}
             name="email"
@@ -80,10 +48,6 @@ const RegisterForm = () => {
           <FormField
             control={form.control}
             name="password"
-            rules={{
-              validate: (value) =>
-                value === form.getValues("confirmPassword") || "Passwords do not match"
-            }}
             render={({ field }) => (
               <PasswordInput
                 {...field}
@@ -103,10 +67,7 @@ const RegisterForm = () => {
             }}
             render={({ field }) => (
               <PasswordInput
-                error={
-                  form.formState.errors.confirmPassword?.message ||
-                  form.formState.errors.password?.message
-                }
+                error={form.formState.errors.confirmPassword?.message}
                 {...field}
                 id="confirmPassword"
                 autoComplete="off"
@@ -145,9 +106,12 @@ const RegisterForm = () => {
               </p>
             </div>
           </div>
-          <Button type="submit">Continue</Button>
+          <Button disabled={state.loading || !form.formState.isDirty} type="submit">
+            {state.loading && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
+            Continue
+          </Button>
           <div
-            onClick={onSignIn}
+            onClick={functions.onSignIn}
             className="mx-auto cursor-pointer text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             have account <span className="font-medium">already</span>

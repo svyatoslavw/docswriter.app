@@ -1,5 +1,5 @@
 import { BaseService } from "@/models/base/base.service"
-import { Injectable } from "@nestjs/common"
+import { Injectable, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { instanceToPlain, plainToInstance } from "class-transformer"
 import { Repository } from "typeorm"
@@ -32,8 +32,11 @@ export class UserService extends BaseService<User, UserEntity> {
     return this.transform(user)
   }
 
-  async findByName(name: string): Promise<UserEntity> {
-    const user = await this.repository.findOne({ where: { name } })
+  async findByCredentials(name: string, email: string): Promise<UserEntity> {
+    const user = await this.repository.findOne({ where: [{ name }, { email }] })
+
+    if (!user) throw new NotFoundException("User not found!")
+
     return this.transform(user)
   }
 

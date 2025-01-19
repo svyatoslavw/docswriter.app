@@ -18,5 +18,7 @@ export class Token implements IToken {
   @Column()
   token: string
   @Column()
+  code: string
+  @Column()
   userId: string
 }

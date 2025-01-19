@@ -6,7 +6,7 @@ import { JwtService } from "@nestjs/jwt"
 import { InjectRepository } from "@nestjs/typeorm"
 import { Response } from "express"
 import { Repository } from "typeorm"
-import { IGeneratedTokenType, ITokenPayload } from "./interfaces/token.interface"
+import { ITokenPayload } from "./interfaces/token.interface"
 
 @Injectable()
 export class TokenService {
@@ -20,54 +20,44 @@ export class TokenService {
     private readonly jwtServise: JwtService
   ) {}
 
-  private async generate(type: IGeneratedTokenType): Promise<ITokenPayload> {
-    if (type === "code") {
-      const token = Math.floor(100000 + Math.random() * 900000).toString()
-      const expiresAt = new Date(Date.now() + 10 * 60000) // 10 minutes
-
-      return { token, expiresAt }
-    }
-
-    const token = crypto.randomUUID()
+  private async generate(): Promise<ITokenPayload> {
+    const codeToken = Math.floor(100000 + Math.random() * 900000).toString()
+    const linkToken = crypto.randomUUID()
     const expiresAt = new Date(Date.now() + 10 * 60000) // 10 minutes
 
-    return { token, expiresAt }
+    return { token: linkToken, code: codeToken, expiresAt }
   }
 
-  async get(userId: string): Promise<ITokenPayload> {
-    const { token, expiresAt } = await this.tokenRepository.findOne({ where: { userId } })
-
-    if (!token) throw new NotFoundException("Token not found!")
-
-    if (expiresAt < new Date()) throw new NotFoundException("Token expired!")
-
-    return { token, expiresAt }
-  }
-
-  async getByToken(userToken: string): Promise<ITokenPayload & { email: string }> {
-    const { token, email, expiresAt } = await this.tokenRepository.findOne({
-      where: { token: userToken }
+  async get(userCode: string): Promise<Token> {
+    const tokenData = await this.tokenRepository.findOne({
+      where: [{ code: userCode }, { token: userCode }]
     })
 
-    if (!token) throw new NotFoundException("Token not found!")
-    Logger.debug(expiresAt, new Date())
-    if (expiresAt < new Date()) throw new NotFoundException("Token expired!")
+    if (!tokenData.token) throw new NotFoundException("Token not found!")
+    Logger.debug(tokenData.expiresAt, new Date())
+    if (tokenData.expiresAt < new Date()) throw new NotFoundException("Token expired!")
 
-    return { token, expiresAt, email }
+    return tokenData
   }
 
-  async save(type: IGeneratedTokenType, userId: string, email: string) {
-    const { expiresAt, token } = await this.generate(type)
+  async save(userId: string, email: string): Promise<Token> {
+    const token = await this.generate()
 
-    const result = await this.tokenRepository.save({ userId, email, token, expiresAt })
+    const result = await this.tokenRepository.save({
+      userId,
+      email,
+      token: token.token,
+      code: token.code,
+      expiresAt: token.expiresAt
+    })
 
     if (!result) throw new NotFoundException("Token not saved!")
 
-    return { token, expiresAt }
+    return result
   }
 
-  async delete(userId: string, email: string, token: string) {
-    await this.tokenRepository.delete({ userId, email, token })
+  async delete(userId: string, email: string, token: string, code: string) {
+    await this.tokenRepository.delete({ userId, email, token, code })
   }
 
   issueTokens(userId: string): ITokens {
@@ -98,12 +88,6 @@ export class TokenService {
   }
 
   removeRefreshToken(res: Response) {
-    res.cookie(this.REFRESH_TOKEN, "", {
-      httpOnly: true,
-      domain: this.postgresConfigService.host,
-      expires: new Date(0),
-      secure: true,
-      sameSite: "none"
-    })
+    res.clearCookie(this.REFRESH_TOKEN, { domain: this.postgresConfigService.host })
   }
 }

@@ -1,18 +1,17 @@
 import { requestMethod } from "./helpers/request-method"
 
-export const authApiRequest = () => {
+export const authApiRequest = <T>() => {
   const headers = {
-    "Content-Type": "application/json",
-    Accept: "application/json"
+    "Access-Control-Allow-Origin": "true"
   }
 
   const authorization = { authorization: true }
 
   return {
-    get: requestMethod("GET", headers, authorization),
-    post: requestMethod("POST", headers, authorization),
-    put: requestMethod("PUT", headers, authorization),
-    delete: requestMethod("DELETE", headers, authorization),
-    patch: requestMethod("PATCH", headers, authorization)
+    get: requestMethod<T>("GET", headers, authorization),
+    post: requestMethod<T>("POST", headers, authorization),
+    put: requestMethod<T>("PUT", headers, authorization),
+    delete: requestMethod<T>("DELETE", headers, authorization),
+    patch: requestMethod<T>("PATCH", headers, authorization)
   }
 }

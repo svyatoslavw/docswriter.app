@@ -2,7 +2,7 @@
 
 import React from "react"
 
-export type Stage = "login" | "register" | "confirmation"
+export type Stage = "login" | "register" | "confirmation" | "verification"
 
 interface IStageContext {
   stage: Stage

@@ -7,11 +7,12 @@ export enum EnumTokenType {
 export interface IToken {
   email: string
   token: string
+  code: string
   userId: string
   type: EnumTokenType
   expiresAt: Date
 }
 
-export type ITokenPayload = Pick<IToken, "token" | "expiresAt">
+export type ITokenPayload = Pick<IToken, "token" | "expiresAt" | "code">
 
 export type IGeneratedTokenType = "code" | "token"

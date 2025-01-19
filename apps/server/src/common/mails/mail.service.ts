@@ -1,3 +1,4 @@
+import { LinkConfirmationDto } from "@/authentication/dto/link-confirmation.dto"
 import { getConfirmationHtml } from "@/common/mails/templates/confirmation-html"
 import { getResetPasswordHtml } from "@/common/mails/templates/reset-password-html"
 import { getTwoFactorHtml } from "@/common/mails/templates/two-factor-html"
@@ -8,13 +9,13 @@ import { Injectable } from "@nestjs/common"
 export class MailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  async sendConfirmationEmail(email: string, code: string) {
+  async sendConfirmationEmail(dto: LinkConfirmationDto, email: string) {
     return this.mailerService.sendMail({
       to: email,
       sender: "Docswriter",
       from: "auth.nest.next@gmail.com",
       subject: "Login Confirmation",
-      html: getConfirmationHtml(code, email)
+      html: getConfirmationHtml(dto, email)
     })
   }
 
